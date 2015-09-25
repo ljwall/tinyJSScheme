@@ -1,0 +1,14 @@
+{
+  "name": "tinyJSScheme",
+  "version": "1.0.0",
+  "description": "Mini Scheme-lite interpreter",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/jasmine"
+  },
+  "author": "ljw.dev@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "jasmine": "^2.3.2"
+  }
+}
