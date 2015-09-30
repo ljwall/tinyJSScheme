@@ -9,19 +9,7 @@ function ParseError (val) {
     this.expecting = val;
   }
 }
-
-/* Wrapper for use in catch blocks whcih should
- * catch ParseError but not other errors */
-filterParseError = function (fn) {
-  return function (err) {
-    if (err instanceof ParseError) {
-      return fn(err);
-    } else {
-      throw err;
-    }
-  }
-};
-
+ParseError.prototype = Object.create(Error.prototype);
 
 function Parser () {
   if (! this instanceof Parser) {
@@ -113,13 +101,13 @@ Parser.prototype.or = function (alt) {
     var errors;
 
     return self.parse(str)
-    .catch(filterParseError(function (err) {
+    .catch(ParseError, function (err) {
       errors = err.expecting;
       return alt.parse(str);
-    }))
-    .catch(filterParseError(function (err) {
+    })
+    .catch(ParseError, function (err) {
       return Promise.reject(new ParseError(errors.concat(err.expecting)));
-    }))
+    });
   };
 
   return combined;
@@ -186,12 +174,12 @@ Parser.many = function (m) {
         remaining: res.remaining
       }
     })
-    .catch(filterParseError(function (err) {
+    .catch(ParseError, function (err) {
       return {
         matched: [],
         remaining: str
       }
-    }));
+    });
   };
   return matcher;
 };
@@ -201,12 +189,12 @@ Parser.maybe = function (m) {
 
   matcher.parse = function (str) {
     return m.parse(str)
-    .catch(filterParseError(function (err) {
+    .catch(ParseError, function (err) {
       return {
         matched: [],
         remaining: str
       }
-    }));
+    });
   };
 
   return matcher;
