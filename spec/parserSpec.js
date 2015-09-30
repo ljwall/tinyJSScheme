@@ -7,9 +7,8 @@ describe('Parser', function () {
   describe('matchStr', function () {
     it('should match a string', function (done) {
       var m = Parser.matchStr('Foo');
-      var parsePromise = m.parse('FooBar!');
 
-      parsePromise.then(function (res) {
+      m.parse('FooBar!').then(function (res) {
         expect(res.matched).toEqual(['Foo']);
         expect(res.remaining).toEqual('Bar!')
       })
@@ -20,9 +19,8 @@ describe('Parser', function () {
 
     it('should fail if no match', function (done) {
       var m = Parser.matchStr('Foo');
-      var parsePromise = m.parse('BarFoo!');
 
-      parsePromise
+      m.parse('BarFoo!')
       .then(done.fail.bind(null, "Should not resolve"))
       .catch(function (err) {
         expect(err.expecting).toEqual(['Foo']);
@@ -41,9 +39,7 @@ describe('Parser', function () {
               .followedBy(Parser.matchStr('Eggs'))
               .followedBy(Parser.matchStr('Ham'));
 
-      var parsePromise = m.parse('FooBarBazSpamEggsHam!!');
-
-      parsePromise.then(function (res) {
+      m.parse('FooBarBazSpamEggsHam!!').then(function (res) {
         expect(res.matched).toEqual(['Foo', 'Bar', 'Baz', 'Spam', 'Eggs', 'Ham']);
         expect(res.remaining).toEqual('!!')
       })
@@ -57,9 +53,7 @@ describe('Parser', function () {
               .followedBy(Parser.matchStr('Bar'))
               .followedBy(Parser.matchStr('Baz'));
 
-      var parsePromise = m.parse('FooBarSpam');
-
-      parsePromise
+      m.parse('FooBarSpam')
       .then(done.fail.bind(null, "Should not resolve"))
       .catch(function (err) {
         expect(err.expecting).toEqual(['Baz']);
@@ -75,9 +69,7 @@ describe('Parser', function () {
               .or(Parser.matchStr('Bar').or(Parser.matchStr('Spam')))
               .or(Parser.matchStr('Baz'));
 
-      var parsePromise = m.parse('BarSpamHam');
-
-      parsePromise.then(function (res) {
+      m.parse('BarSpamHam').then(function (res) {
         expect(res.matched).toEqual(['Bar']);
         expect(res.remaining).toEqual('SpamHam');
       })
@@ -89,9 +81,7 @@ describe('Parser', function () {
       var m = Parser.matchStr('Foo')
               .or(Parser.matchStr('Bar'));
 
-      var parsePromise = m.parse('BazSpamHam');
-
-      parsePromise
+      m.parse('BazSpamHam')
       .then(done.fail.bind(null, "Should not resolve"))
       .catch(function (err) {
         expect(err.expecting).toEqual(['Foo', 'Bar']);
@@ -104,9 +94,8 @@ describe('Parser', function () {
     it('should alter the returned match', function (done) {
       var m = Parser.matchStr('Foo')
               .andReturn(99);
-      var parsePromise = m.parse('FooBar');
 
-      parsePromise.then(function (res) {
+      m.parse('FooBar').then(function (res) {
         expect(res.matched).toEqual([99]);
         expect(res.remaining).toEqual('Bar');
       })
@@ -119,9 +108,8 @@ describe('Parser', function () {
     it('should alter the returned match', function (done) {
       var m = Parser.matchStr('99')
               .map(parseInt);
-      var parsePromise = m.parse('99Bar');
 
-      parsePromise.then(function (res) {
+      m.parse('99Bar').then(function (res) {
         expect(res.matched).toEqual([99]);
         expect(res.remaining).toEqual('Bar');
       })
@@ -134,9 +122,7 @@ describe('Parser', function () {
     it('should match many', function (done) {
       var m = Parser.many(Parser.matchStr('Foo'));
 
-      var parsePromise = m.parse('FooFooFooFooBar');
-
-      parsePromise.then(function (res) {
+       m.parse('FooFooFooFooBar').then(function (res) {
         expect(res.matched).toEqual(['Foo', 'Foo', 'Foo', 'Foo']);
         expect(res.remaining).toEqual('Bar')
       })
@@ -146,9 +132,7 @@ describe('Parser', function () {
     it('should not fail if no match', function (done) {
       var m = Parser.many(Parser.matchStr('Bar'));
 
-      var parsePromise = m.parse('FooBar');
-
-      parsePromise.then(function (res) {
+      m.parse('FooBar').then(function (res) {
         expect(res.matched).toEqual([]);
         expect(res.remaining).toEqual('FooBar')
       })
@@ -159,10 +143,9 @@ describe('Parser', function () {
   describe('alphaChar', function () {
     it('should match alpha chars', function (done) {
       /* cheating - use many */
-      var m = Parser.many(Parser.alphaChar()),
-          parsePromise = m.parse('alzALZ{');
+      var m = Parser.many(Parser.alphaChar());
 
-      parsePromise.then(function (res) {
+      m.parse('alzALZ{').then(function (res) {
         expect(res.matched).toEqual(['a', 'l', 'z', 'A', 'L', 'Z']);
         expect(res.remaining).toEqual('{')
       })
@@ -173,10 +156,9 @@ describe('Parser', function () {
   describe('numericChar', function () {
     it('should match numeric chars', function (done) {
       /* cheating - use many */
-      var m = Parser.many(Parser.numericChar()),
-          parsePromise = m.parse('0123456789@');
+      var m = Parser.many(Parser.numericChar());
 
-      parsePromise.then(function (res) {
+      m.parse('0123456789@').then(function (res) {
         expect(res.matched).toEqual(['0', '1', '2', '3', '4',
                                      '5', '6', '7', '8', '9']);
         expect(res.remaining).toEqual('@')
@@ -187,10 +169,9 @@ describe('Parser', function () {
   });
   describe('maybe', function () {
     it('matches', function (done) {
-      var m = Parser.maybe(Parser.matchStr('Foo')),
-          parsePromise = m.parse('FooBar');
+      var m = Parser.maybe(Parser.matchStr('Foo'));
 
-      parsePromise.then(function (res) {
+      m.parse('FooBar').then(function (res) {
         expect(res.matched).toEqual(['Foo']);
         expect(res.remaining).toEqual('Bar')
       })
@@ -198,10 +179,9 @@ describe('Parser', function () {
       .done(done)
     });
     it('doesn\' fail if no matches', function (done) {
-      var m = Parser.maybe(Parser.matchStr('Foo')),
-          parsePromise = m.parse('BarFoo');
+      var m = Parser.maybe(Parser.matchStr('Foo'));
 
-      parsePromise.then(function (res) {
+      m.parse('BarFoo').then(function (res) {
         expect(res.matched).toEqual([]);
         expect(res.remaining).toEqual('BarFoo')
       })
@@ -211,10 +191,9 @@ describe('Parser', function () {
   });
   describe('squash', function () {
     it('matches and squashed', function (done) {
-      var m = Parser.matchStr('Foo').squash(),
-          parsePromise = m.parse('FooBar');
+      var m = Parser.matchStr('Foo').squash();
 
-      parsePromise.then(function (res) {
+      m.parse('FooBar').then(function (res) {
         expect(res.matched).toEqual([]);
         expect(res.remaining).toEqual('Bar')
       })
