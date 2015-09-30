@@ -209,4 +209,17 @@ describe('Parser', function () {
       .done(done)
     });
   });
+  describe('squash', function () {
+    it('matches and squashed', function (done) {
+      var m = Parser.matchStr('Foo').squash(),
+          parsePromise = m.parse('FooBar');
+
+      parsePromise.then(function (res) {
+        expect(res.matched).toEqual([]);
+        expect(res.remaining).toEqual('Bar')
+      })
+      .catch(done.fail)
+      .done(done)
+    });
+  });
 });

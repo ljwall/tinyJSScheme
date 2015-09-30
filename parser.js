@@ -90,6 +90,21 @@ Parser.prototype.followedBy = function (next) {
   return combined;
 };
 
+Parser.prototype.squash = function () {
+  var modified = new Parser()
+      self = this;
+  modified.parse = function (str) {
+    return self.parse(str)
+    .then(function (res) {
+      return {
+        matched: [],
+        remaining: res.remaining
+      }
+    });
+  };
+  return modified;
+};
+
 Parser.prototype.or = function (alt) {
   var combined = new Parser(),
       self = this;
