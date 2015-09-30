@@ -211,3 +211,8 @@ Parser.maybe = function (m) {
 
   return matcher;
 };
+
+Parser.sepBy = function (sep, m) {
+  var compound = sep.squash().followedBy(m);
+  return m.followedBy(Parser.many(compound));
+}

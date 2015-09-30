@@ -222,4 +222,18 @@ describe('Parser', function () {
       .done(done)
     });
   });
+  describe('sepBy', function () {
+    it('should match', function (done) {
+      var m = Parser.sepBy(Parser.matchStr('-'),
+                           Parser.matchStr('Foo').or(Parser.matchStr('Bar')));
+
+      m.parse('Bar-Foo-Foo-Bar-Wrong')
+      .then(function (res) {
+        expect(res.matched).toEqual(['Bar', 'Foo', 'Foo', 'Bar']);
+        expect(res.remaining).toEqual('-Wrong')
+      })
+      .catch(done.fail)
+      .done(done)
+    });
+  });
 });
