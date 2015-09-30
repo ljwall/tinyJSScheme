@@ -180,3 +180,19 @@ Parser.many = function (m) {
   };
   return matcher;
 };
+
+Parser.maybe = function (m) {
+  var matcher = new Parser();
+
+  matcher.parse = function (str) {
+    return m.parse(str)
+    .catch(filterParseError(function (err) {
+      return {
+        matched: [],
+        remaining: str
+      }
+    }));
+  };
+
+  return matcher;
+};

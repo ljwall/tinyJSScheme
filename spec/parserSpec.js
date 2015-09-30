@@ -185,4 +185,28 @@ describe('Parser', function () {
       .done(done)
     });
   });
+  describe('maybe', function () {
+    it('matches', function (done) {
+      var m = Parser.maybe(Parser.matchStr('Foo')),
+          parsePromise = m.parse('FooBar');
+
+      parsePromise.then(function (res) {
+        expect(res.matched).toEqual(['Foo']);
+        expect(res.remaining).toEqual('Bar')
+      })
+      .catch(done.fail)
+      .done(done)
+    });
+    it('doesn\' fail if no matches', function (done) {
+      var m = Parser.maybe(Parser.matchStr('Foo')),
+          parsePromise = m.parse('BarFoo');
+
+      parsePromise.then(function (res) {
+        expect(res.matched).toEqual([]);
+        expect(res.remaining).toEqual('BarFoo')
+      })
+      .catch(done.fail)
+      .done(done)
+    });
+  });
 });
