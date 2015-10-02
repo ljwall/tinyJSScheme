@@ -1,5 +1,5 @@
 var parseScheme = require('./parseScheme.js'),
-    scheme = require('./schemeTypes'),
+    scheme = require('./scheme.js'),
     readline = require('readline'),
     rl = readline.createInterface(process.stdin, process.stdout);
 

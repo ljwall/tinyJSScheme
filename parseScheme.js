@@ -1,5 +1,5 @@
 var Parser = require('./parser.js'),
-    type = require('./schemeTypes.js');
+    scheme = require('./scheme.js');
 
 module.exports = parseLispExpr;
 
@@ -16,7 +16,7 @@ var parseAtom =
       .or(Parser.alphaChar)
       .or(Parser.numericChar)))
   .reduce(strconcat, '')
-  .map(function (str) {return new type.SchemeAtom(str)});
+  .map(function (str) {return new scheme.SchemeAtom(str)});
 
 var parseString =
   Parser.matchStr('"').squash()
@@ -31,15 +31,15 @@ var parseString =
   )
   .followedBy(Parser.matchStr('"').squash())
   .reduce(strconcat, '')
-  .map(function (str) {return new type.SchemeString(str)});
+  .map(function (str) {return new scheme.SchemeString(str)});
 
 var parseTrue =
   Parser.matchStr('#t')
-  .andReturn(new type.SchemeBool(true));
+  .andReturn(new scheme.SchemeBool(true));
 
 var parseFalse =
   Parser.matchStr('#f')
-  .andReturn(new type.SchemeBool(false));
+  .andReturn(new scheme.SchemeBool(false));
 
 var parseBool = parseTrue.or(parseFalse);
 
@@ -54,7 +54,7 @@ var parseNum =
   )
   .reduce(strconcat, '')
   .map(parseFloat)
-  .map(function (num) {return new type.SchemeNum(num)});
+  .map(function (num) {return new scheme.SchemeNum(num)});
 
 var parseWhiteSpace = Parser.many(Parser.oneOfChars(' \n\r\t'));
 
@@ -71,7 +71,7 @@ var parseList =
     Parser.matchStr(')')
     .squash()
   )
-  .then(function(res) { return [new type.SchemeList(res)]; });
+  .then(function(res) { return [new scheme.SchemeList(res)]; });
 
 
 var parseQuotedExpr =
@@ -81,7 +81,7 @@ var parseQuotedExpr =
     return parseExpr.parse(str);
   }))
   .then(function (res) {
-    return [new type.SchemeList([new type.SchemeAtom('quoted'), res[0]])]
+    return [new scheme.SchemeList([new scheme.SchemeAtom('quoted'), res[0]])]
   });
 
 var parseExpr = parseAtom
