@@ -72,11 +72,22 @@ var parseList =
   )
   .then(function(res) { return [new type.SchemeList(res)]; });
 
+var parseQutoedExpr =
+  Parser.matchStr('\'')
+  .squash()
+  .followedBy(new Parser(function (str) {
+    return parseExpr.parse(str);
+  }))
+  .then(function (res) {
+    return [new type.SchemeList([new type.SchemeAtom('quoted'), res[0]])]
+  });
+
 var parseExpr = parseAtom
   .or(parseString)
   .or(parseBool)
   .or(parseNum)
-  .or(parseList);
+  .or(parseList)
+  .or(parseQutoedExpr);
 
 
 function parseLispExpr (str) {
