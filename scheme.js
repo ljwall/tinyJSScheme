@@ -8,7 +8,8 @@ module.exports = {
   SchemeList: SchemeList,
   globalEnv: globalEnv,
   SchemeError: SchemeError,
-  SchemePrimativeFunction: SchemePrimativeFunction
+  SchemePrimativeFunction: SchemePrimativeFunction,
+  SchemeUserFunction: SchemeUserFunction
 };
 
 function SchemeError (msg) {
@@ -27,11 +28,30 @@ function SchemeFunction () {}
 function SchemePrimativeFunction (fn) { this.fn = fn; }
 SchemePrimativeFunction.prototype = new SchemeFunction();
 
-
-
 SchemePrimativeFunction.prototype.apply = function (argsList) {
   return this.fn.apply(null, argsList);
 }
+
+function SchemeUserFunction (env, argNames, bodyExpressions) {
+  this.env = env;
+  this.argNames = argNames;
+  this.bodyExpressions = bodyExpressions;
+}
+SchemeUserFunction.prototype = new SchemeFunction();
+
+SchemeUserFunction.prototype.apply = function (argsList) {
+  if (this.argNames.length !== argsList.length) {
+    throw new SchemeError("Exected " + this.argNames.length + " arguments; found:", argsList);
+  }
+  var newScope = Object.create(this.env);
+  for (var i=0; i < this.argNames.length; i++) {
+    newScope[this.argNames[i].val] = argsList[i];
+  }
+  return this.bodyExpressions.reduce(function (_, expr) {
+    //debugger
+    return expr.eval(newScope);
+  }, new SchemeList([]));
+};
 
 /*
  * Evaling thigs....
@@ -39,7 +59,7 @@ SchemePrimativeFunction.prototype.apply = function (argsList) {
 
 SchemeAtom.prototype.eval = function (env) {
   if (env[this.val] === undefined) {
-    throw new SchemeError('Variable ' + this.val + 'undefined.');
+    throw new SchemeError('Variable ' + this.val + ' undefined.');
   }
   return env[this.val];
 };
@@ -61,6 +81,17 @@ SchemeList.prototype.eval = function (env) {
         }
         env[this.val[1].val] = this.val[2].eval(env);
         return env[this.val[1].val];
+      case 'lambda':
+        if ((this.val.length < 3) || !(this.val[1] instanceof SchemeList)) {
+          throw new SchemeError('Form of lambda is (lambda (arg1 .. argN) expr1 .. exprN)');
+        }
+        this.val[1].val.forEach(function (argName) {
+          if (!(argName instanceof SchemeAtom)) {
+            throw new SchemeError('Form of lambda is (lambda (arg1 .. argN) expr1 .. exprN)\n' +
+                                      'where each of arg1 .. argN is a binding name.');
+          }
+        });
+        return new SchemeUserFunction(env, this.val[1].val, this.val.slice(2));
     }
   }
 
