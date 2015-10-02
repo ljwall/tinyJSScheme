@@ -10,19 +10,21 @@ var parseExpr = function (str) {
   });
 };
 
+var env = Object.create(scheme.globalEnv);
+
 rl.setPrompt('>>> ');
 rl.prompt();
 
 rl.on('line', function(line) {
   parseExpr(line)
   .then(function (expr) {
-    console.log(expr.eval(scheme.globalEnv));
+    console.log(expr.eval(env));
   })
-  .catch(function (err) {
+  .catch(scheme.SchemeError, function (err) {
      console.log('Error:', err);
   })
   .then(rl.prompt.bind(rl))
 }).on('close', function() {
-  console.log('Bye bye...');
+  console.log('\nBye bye...\n');
   process.exit(0);
 });
