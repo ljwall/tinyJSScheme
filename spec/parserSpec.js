@@ -143,7 +143,7 @@ describe('Parser', function () {
   describe('alphaChar', function () {
     it('should match alpha chars', function (done) {
       /* cheating - use many */
-      var m = Parser.many(Parser.alphaChar());
+      var m = Parser.many(Parser.alphaChar);
 
       m.parse('alzALZ{').then(function (res) {
         expect(res.matched).toEqual(['a', 'l', 'z', 'A', 'L', 'Z']);
@@ -156,7 +156,7 @@ describe('Parser', function () {
   describe('numericChar', function () {
     it('should match numeric chars', function (done) {
       /* cheating - use many */
-      var m = Parser.many(Parser.numericChar());
+      var m = Parser.many(Parser.numericChar);
 
       m.parse('0123456789@').then(function (res) {
         expect(res.matched).toEqual(['0', '1', '2', '3', '4',
@@ -213,6 +213,22 @@ describe('Parser', function () {
       })
       .catch(done.fail)
       .done(done)
+    });
+  });
+
+  describe('oneOfChars', function () {
+    it('should match', function () {
+      pending();
+    });
+  });
+  describe('noneOfChars', function () {
+    it('should match', function () {
+      pending();
+    });
+  });
+  describe('reduce', function () {
+    it('should work', function () {
+      pending();
     });
   });
 });
