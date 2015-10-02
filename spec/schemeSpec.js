@@ -74,4 +74,15 @@ describe('scheme', function () {
     ]);
     expect(list.eval({})).toEqual(new scheme.SchemeUserFunction({},argsList,bodyList));
   });
+  it('quoted special form should work', function () {
+    var list = new scheme.SchemeList([
+        new scheme.SchemeNum(99),
+        new scheme.SchemeNum(101)
+    ]);
+    var quotedlist = new scheme.SchemeList([
+      new scheme.SchemeAtom("quoted"),
+      list
+    ]);
+    expect(quotedlist.eval({})).toEqual(list);
+  });
 });

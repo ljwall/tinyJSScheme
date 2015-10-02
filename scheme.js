@@ -92,6 +92,11 @@ SchemeList.prototype.eval = function (env) {
           }
         });
         return new SchemeUserFunction(env, this.val[1].val, this.val.slice(2));
+      case 'quoted':
+        if (this.val.length !== 2) {
+          throw new SchemeError('Form of quoted is (quoted expr)');
+        }
+        return this.val[1];
     }
   }
 
