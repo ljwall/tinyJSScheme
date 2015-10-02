@@ -1,5 +1,7 @@
 var parseScheme = require('./parseScheme.js'),
-    scheme = require('./schemeTypes');
+    scheme = require('./schemeTypes'),
+    readline = require('readline'),
+    rl = readline.createInterface(process.stdin, process.stdout);
 
 var parseExpr = function (str) {
   return parseScheme(str)
@@ -8,13 +10,19 @@ var parseExpr = function (str) {
   });
 };
 
-var exprStr = '(+ (- (* 2 2) (/ 10 10)) (* (- 1002 1000) (/ 49 7)))';
+rl.setPrompt('>>> ');
+rl.prompt();
 
-parseExpr(exprStr)
-.then(function (expr) {
-  console.log('>>', exprStr)
-  console.log(expr.eval(scheme.globalEnv));
-})
-.catch(function (err) {
-   console.log('Error:', err);
+rl.on('line', function(line) {
+  parseExpr(line)
+  .then(function (expr) {
+    console.log(expr.eval(scheme.globalEnv));
+  })
+  .catch(function (err) {
+     console.log('Error:', err);
+  })
+  .then(rl.prompt.bind(rl))
+}).on('close', function() {
+  console.log('Bye bye...');
+  process.exit(0);
 });
