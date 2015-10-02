@@ -124,3 +124,41 @@ globalEnv['+'] = wrapBinNum(function(a, b) {return a+b; });
 globalEnv['*'] = wrapBinNum(function(a, b) {return a*b; });
 globalEnv['-'] = wrapBinNum(function(a, b) {return a-b; });
 globalEnv['/'] = wrapBinNum(function(a, b) {return a/b; });
+
+/*
+ * toString functions..
+ */
+
+
+SchemeAtom.prototype.toString = function () {
+  return this.val;
+};
+SchemeString.prototype.toString = function () {
+  return '"' + this.val + '"';
+};
+SchemeBool.prototype.toString = function () {
+  if (this.val) {
+    return "#t";
+  }
+  return "#f";
+};
+SchemeNum.prototype.toString = function () {
+  return this.val.toString();
+};
+SchemeList.prototype.toString = function () {
+  return '(' +
+    this.val.map(function (item) {return item.toString()})
+    .reduce(function(acc, next) {
+      return acc + ' ' + next
+    }, '').trim() + ')';
+};
+
+SchemeError.prototype.toString = function () {
+  return this.message;
+};
+SchemePrimativeFunction.prototype.toString = function () {
+  return '<built-in function>'
+};
+SchemeUserFunction.prototype.toString = function () {
+  return '(lambda ' + (new SchemeList(this.argNames)).toString() + ' ...)';
+};

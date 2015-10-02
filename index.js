@@ -18,10 +18,10 @@ rl.prompt();
 rl.on('line', function(line) {
   parseExpr(line)
   .then(function (expr) {
-    console.log(expr.eval(env));
+    console.log(expr.eval(env).toString());
   })
   .catch(scheme.SchemeError, function (err) {
-     console.log('Error:', err);
+     console.log('Error:', err.toString());
   })
   .then(rl.prompt.bind(rl))
 }).on('close', function() {
