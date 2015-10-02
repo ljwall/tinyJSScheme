@@ -5,13 +5,14 @@ module.exports = parseLispExpr;
 
 function strconcat (a, b) {return a+b;};
 
-var parseSpecialChars =  Parser.oneOfChars('\'-<>?=!$~');
+var parseSpecialChar =  Parser.oneOfChars('-<>?=!$~+*\\/');
 
 var parseAtom =
   Parser.alphaChar
+  .or(parseSpecialChar)
   .followedBy(
     Parser.many(
-      parseSpecialChars
+      parseSpecialChar
       .or(Parser.alphaChar)
       .or(Parser.numericChar)))
   .reduce(strconcat, '')
@@ -72,7 +73,8 @@ var parseList =
   )
   .then(function(res) { return [new type.SchemeList(res)]; });
 
-var parseQutoedExpr =
+
+var parseQuotedExpr =
   Parser.matchStr('\'')
   .squash()
   .followedBy(new Parser(function (str) {
@@ -87,7 +89,7 @@ var parseExpr = parseAtom
   .or(parseBool)
   .or(parseNum)
   .or(parseList)
-  .or(parseQutoedExpr);
+  .or(parseQuotedExpr);
 
 
 function parseLispExpr (str) {

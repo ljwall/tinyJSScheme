@@ -115,4 +115,21 @@ describe('pasreScheme', function () {
     .catch(done.fail)
     .done(done);
   });
+
+  it('should parse (bar 1 (foo 2)) correctly', function (done) {
+    pasreScheme('(bar 1 (foo 2))')
+    .then(function (res) {
+      expect(res.matched[0]).toEqual(
+        new types.SchemeList([
+          new types.SchemeAtom('bar'),
+          new types.SchemeNum(1),
+          new types.SchemeList([
+            new types.SchemeAtom('foo'),
+            new types.SchemeNum(2)
+          ])
+        ]));
+    })
+    .catch(done.fail)
+    .done(done);
+  });
 });

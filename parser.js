@@ -165,8 +165,8 @@ Parser.alphaChar =
 
 
 Parser.many = function (m) {
-  var first;
   return new Parser(function (str) {
+    var first;
     return m.parse(str)
     .then(function (res) {
       first = res.matched;
