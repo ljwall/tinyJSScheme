@@ -1,4 +1,4 @@
-Parser = require('../parser.js');
+Parser = require('../lib/parser.js');
 var Promise = require('bluebird');
 
 

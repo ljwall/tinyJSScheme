@@ -1,5 +1,5 @@
-var scheme = require('../scheme.js'),
-    parseScheme = require('../parseScheme.js');
+var scheme = require('../lib/scheme.js'),
+    parseScheme = require('../lib/parseScheme.js');
 
 describe('parseScheme', function () {
   it('should match Atoms', function (done) {

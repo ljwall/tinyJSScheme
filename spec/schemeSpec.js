@@ -1,4 +1,4 @@
-var scheme = require('../scheme.js');
+var scheme = require('../lib/scheme.js');
 
 describe('scheme', function () {
   it('SchemeString should eval to itself', function () {

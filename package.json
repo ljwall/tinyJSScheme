@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Mini Scheme-lite interpreter",
   "main": "index.js",
+  "bin": "./bin/tinyJSScheme.js"
   "scripts": {
     "test": "./node_modules/.bin/jasmine"
   },
