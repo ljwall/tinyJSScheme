@@ -2,6 +2,7 @@
 
 var parseScheme = require('../index.js').parseScheme,
     scheme = require('../index.js').scheme,
+    schemeEnv = require('../index.js').schemeEnv,
     readline = require('readline'),
     rl = readline.createInterface(process.stdin, process.stdout);
 
@@ -12,7 +13,7 @@ var parseExpr = function (str) {
   });
 };
 
-var env = Object.create(scheme.globalEnv);
+var env = Object.create(schemeEnv);
 
 rl.setPrompt('>>> ');
 rl.prompt();
