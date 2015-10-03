@@ -1,0 +1,18 @@
+{
+  "globals": {
+    "module": true,
+    "require": false
+  },
+  "undef": true,
+  "overrides": {
+    "spec/*.js": {
+      "globals": {
+        "describe": false,
+        "it": false,
+        "jasmine": false,
+        "expect": false,
+        "pending": false
+      }
+    }
+  }
+}
