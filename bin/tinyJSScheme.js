@@ -25,8 +25,9 @@ rl.on('line', function(line) {
   .catch(scheme.SchemeError, function (err) {
      console.log('Error:', err.toString());
   })
-  .then(rl.prompt.bind(rl))
-}).on('close', function() {
+  .then(rl.prompt.bind(rl));
+})
+.on('close', function() {
   console.log('\nBye bye...\n');
   process.exit(0);
 });

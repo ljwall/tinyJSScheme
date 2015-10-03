@@ -1,5 +1,4 @@
-Parser = require('../lib/parser.js');
-var Promise = require('bluebird');
+var Parser = require('../lib/parser.js');
 
 
 describe('Parser', function () {
@@ -10,7 +9,7 @@ describe('Parser', function () {
 
       m.parse('FooBar!').then(function (res) {
         expect(res.matched).toEqual(['Foo']);
-        expect(res.remaining).toEqual('Bar!')
+        expect(res.remaining).toEqual('Bar!');
       })
       .catch(done.fail)
       .done(done);
@@ -25,7 +24,7 @@ describe('Parser', function () {
       .catch(function (err) {
         expect(err.expecting).toEqual(['Foo']);
         done();
-      })
+      });
 
     });
   });
@@ -41,10 +40,10 @@ describe('Parser', function () {
 
       m.parse('FooBarBazSpamEggsHam!!').then(function (res) {
         expect(res.matched).toEqual(['Foo', 'Bar', 'Baz', 'Spam', 'Eggs', 'Ham']);
-        expect(res.remaining).toEqual('!!')
+        expect(res.remaining).toEqual('!!');
       })
       .catch(done.fail)
-      .done(done)
+      .done(done);
 
     });
 
@@ -124,20 +123,20 @@ describe('Parser', function () {
 
        m.parse('FooFooFooFooBar').then(function (res) {
         expect(res.matched).toEqual(['Foo', 'Foo', 'Foo', 'Foo']);
-        expect(res.remaining).toEqual('Bar')
+        expect(res.remaining).toEqual('Bar');
       })
       .catch(done.fail)
-      .done(done)
+      .done(done);
     });
     it('should not fail if no match', function (done) {
       var m = Parser.many(Parser.matchStr('Bar'));
 
       m.parse('FooBar').then(function (res) {
         expect(res.matched).toEqual([]);
-        expect(res.remaining).toEqual('FooBar')
+        expect(res.remaining).toEqual('FooBar');
       })
       .catch(done.fail)
-      .done(done)
+      .done(done);
     });
   });
   describe('alphaChar', function () {
@@ -147,10 +146,10 @@ describe('Parser', function () {
 
       m.parse('alzALZ{').then(function (res) {
         expect(res.matched).toEqual(['a', 'l', 'z', 'A', 'L', 'Z']);
-        expect(res.remaining).toEqual('{')
+        expect(res.remaining).toEqual('{');
       })
       .catch(done.fail)
-      .done(done)
+      .done(done);
     });
   });
   describe('numericChar', function () {
@@ -161,10 +160,10 @@ describe('Parser', function () {
       m.parse('0123456789@').then(function (res) {
         expect(res.matched).toEqual(['0', '1', '2', '3', '4',
                                      '5', '6', '7', '8', '9']);
-        expect(res.remaining).toEqual('@')
+        expect(res.remaining).toEqual('@');
       })
       .catch(done.fail)
-      .done(done)
+      .done(done);
     });
   });
   describe('maybe', function () {
@@ -173,20 +172,20 @@ describe('Parser', function () {
 
       m.parse('FooBar').then(function (res) {
         expect(res.matched).toEqual(['Foo']);
-        expect(res.remaining).toEqual('Bar')
+        expect(res.remaining).toEqual('Bar');
       })
       .catch(done.fail)
-      .done(done)
+      .done(done);
     });
     it('doesn\' fail if no matches', function (done) {
       var m = Parser.maybe(Parser.matchStr('Foo'));
 
       m.parse('BarFoo').then(function (res) {
         expect(res.matched).toEqual([]);
-        expect(res.remaining).toEqual('BarFoo')
+        expect(res.remaining).toEqual('BarFoo');
       })
       .catch(done.fail)
-      .done(done)
+      .done(done);
     });
   });
   describe('squash', function () {
@@ -195,10 +194,10 @@ describe('Parser', function () {
 
       m.parse('FooBar').then(function (res) {
         expect(res.matched).toEqual([]);
-        expect(res.remaining).toEqual('Bar')
+        expect(res.remaining).toEqual('Bar');
       })
       .catch(done.fail)
-      .done(done)
+      .done(done);
     });
   });
   describe('sepBy', function () {
@@ -209,10 +208,10 @@ describe('Parser', function () {
       m.parse('Bar-Foo-Foo-Bar-Wrong')
       .then(function (res) {
         expect(res.matched).toEqual(['Bar', 'Foo', 'Foo', 'Bar']);
-        expect(res.remaining).toEqual('-Wrong')
+        expect(res.remaining).toEqual('-Wrong');
       })
       .catch(done.fail)
-      .done(done)
+      .done(done);
     });
   });
 

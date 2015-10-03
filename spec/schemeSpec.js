@@ -39,7 +39,6 @@ describe('scheme', function () {
         new scheme.SchemeAtom("foo"),
         new scheme.SchemeAtom("bar")
       ]);
-      var fn = jasmine.createSpy();
       var env = {
         foo: new scheme.SchemeUserFunction({}, [new scheme.SchemeAtom("x")], [new scheme.SchemeAtom("x")]),
         bar: new scheme.SchemeNum(99)
