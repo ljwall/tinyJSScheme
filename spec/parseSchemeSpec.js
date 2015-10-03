@@ -116,6 +116,21 @@ describe('parseScheme', function () {
     .done(done);
   });
 
+  it('should parse dotted lists correctly', function (done) {
+    parseScheme('(1 2 3 . 4)')
+    .then(function (res) {
+      expect(res.matched[0]).toEqual(
+        new scheme.SchemeDottedList([
+          new scheme.SchemeNum(1),
+          new scheme.SchemeNum(2),
+          new scheme.SchemeNum(3)
+        ], new scheme.SchemeNum(4))
+      );
+    })
+    .catch(done.fail)
+    .done(done);
+  });
+
   it('should parse (bar 1 (foo 2)) correctly', function (done) {
     parseScheme('(bar 1 (foo 2))')
     .then(function (res) {
