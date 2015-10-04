@@ -26,6 +26,9 @@ rl.on('line', function(line) {
   .catch(scheme.SchemeError, function (err) {
      console.log('Error:', err.toString());
   })
+  .catch(parseScheme.ParseError, function (err) {
+     console.log('Parser error. Expecting:\n', err.expecting);
+  })
   .then(rl.prompt.bind(rl));
 })
 .on('close', function() {
