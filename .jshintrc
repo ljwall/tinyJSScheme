@@ -1,7 +1,8 @@
 {
   "globals": {
     "module": true,
-    "require": false
+    "require": false,
+    "define": false
   },
   "undef": true,
   "overrides": {
