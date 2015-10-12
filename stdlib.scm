@@ -1,10 +1,13 @@
 (define nill?
   (lambda (lst) (== lst '())))
 
+;; Filter a list
+;; predFn - predicate function called with each item in list. Return #t or #f
+;; lst - list to filter
 (define filter
   (lambda (predFn lst)
     (if (nill? lst)
-      '()
+      '() ;; Gratuitous surplus comment ...
       (if (predFn (head lst))
         (cons (head lst) (filter predFn (tail lst)))
         (filter predFn (tail lst))))))

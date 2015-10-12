@@ -147,4 +147,17 @@ describe('parseScheme', function () {
     .catch(done.fail)
     .done(done);
   });
+
+  it('should parse comments as white space', function (done) {
+    parseScheme.one('(bar;;ThisIsComment\nfoo;;AndMoreComment\n)')
+    .then(function (res) {
+      expect(res.matched[0]).toEqual(
+        new scheme.SchemeList([
+          new scheme.SchemeAtom('bar'),
+          new scheme.SchemeAtom('foo'),
+        ]));
+    })
+    .catch(done.fail)
+    .done(done);
+  });
 });
