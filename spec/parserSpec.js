@@ -224,6 +224,14 @@ describe('Parser', function () {
     it('should match', function () {
       pending();
     });
+    it('should fail on empty string', function (done) {
+      Parser.noneOfChars('abc')
+      .parse('')
+      .then(done.fail.bind(null, "Should not resolve"))
+      .catch(function (err) {
+        done();
+      });
+    });
   });
   describe('reduce', function () {
     it('should work', function () {
