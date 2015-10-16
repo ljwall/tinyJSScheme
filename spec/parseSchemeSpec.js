@@ -13,9 +13,9 @@ describe('parseScheme', function () {
   });
 
   it('should match Strings', function (done) {
-    parseScheme.one('"Foo\\tBar\\n\\"Spam"rest')
+    parseScheme.one('"Foo\\tBar\\n\\"Spam\\\\"rest')
     .then(function (res) {
-      expect(res.matched[0]).toEqual(new scheme.SchemeString('Foo\tBar\n"Spam'));
+      expect(res.matched[0]).toEqual(new scheme.SchemeString('Foo\tBar\n"Spam\\'));
       expect(res.remaining).toEqual('rest');
     })
     .catch(done.fail)
@@ -149,7 +149,7 @@ describe('parseScheme', function () {
   });
 
   it('should parse comments as white space', function (done) {
-    parseScheme.one('(bar;;ThisIsComment\nfoo;;AndMoreComment\n)')
+    parseScheme.one('(bar;ThisIsComment\nfoo;AndMoreComment\n)')
     .then(function (res) {
       expect(res.matched[0]).toEqual(
         new scheme.SchemeList([
