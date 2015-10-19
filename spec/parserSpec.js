@@ -22,7 +22,10 @@ describe('Parser', function () {
       m.parse('BarFoo!')
       .then(done.fail.bind(null, "Should not resolve"))
       .catch(function (err) {
-        expect(err.expecting).toEqual(['Foo']);
+        expect(err.expecting).toEqual([{
+          val: 'Foo',
+          context: 'BarFoo!'
+        }]);
         done();
       });
 
@@ -55,7 +58,10 @@ describe('Parser', function () {
       m.parse('FooBarSpam')
       .then(done.fail.bind(null, "Should not resolve"))
       .catch(function (err) {
-        expect(err.expecting).toEqual(['Baz']);
+        expect(err.expecting).toEqual([{
+          val: 'Baz',
+          context: 'Spam'
+        }]);
         done();
       });
 
@@ -83,7 +89,13 @@ describe('Parser', function () {
       m.parse('BazSpamHam')
       .then(done.fail.bind(null, "Should not resolve"))
       .catch(function (err) {
-        expect(err.expecting).toEqual(['Foo', 'Bar']);
+        expect(err.expecting).toEqual([{
+          val: 'Foo',
+          context: 'BazSpamHam'
+        }, {
+          val: 'Bar',
+          context: 'BazSpamHam'
+        }]);
         done();
       });
     });
@@ -237,5 +249,27 @@ describe('Parser', function () {
     it('should work', function () {
       pending();
     });
+  });
+
+  describe('complex failures', function () {
+    it('should work with mixture of folledBy and or', function (done) {
+      Parser.matchStr('Foo')
+      .followedBy(
+        Parser.matchStr('Bar').followedBy(Parser.matchStr('Baz'))
+        .or(Parser.matchStr('Spam'))
+      )
+
+      .parse('FooBarSpam')
+      .then(done.fail.bind(null, "Should not resolve"))
+      .catch(function (err) {
+        expect(err.expecting).toEqual([
+          {
+            val: 'Baz',
+            context: 'Spam'
+          }
+        ]);
+        done();
+      });
+    })
   });
 });

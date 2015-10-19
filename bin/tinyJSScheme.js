@@ -41,7 +41,8 @@ rl.on('line', function(line) {
      console.log('Error:', err.toString());
   })
   .catch(parseScheme.ParseError, function (err) {
-     console.log('Parser error. Expecting:\n', err.expecting);
+     //console.log('Parser error. Expecting:\n', err.expecting);
+     console.log(err.prettyMessage);
   })
   .then(rl.prompt.bind(rl));
 })
