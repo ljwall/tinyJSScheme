@@ -149,7 +149,7 @@ describe('parseScheme', function () {
   });
 
   it('should parse comments as white space', function (done) {
-    parseScheme.one('(bar;ThisIsComment\nfoo;AndMoreComment\n)')
+    parseScheme.one('(bar;ThisIsComment\nfoo);AndMoreComment')
     .then(function (res) {
       expect(res.matched[0]).toEqual(
         new scheme.SchemeList([
