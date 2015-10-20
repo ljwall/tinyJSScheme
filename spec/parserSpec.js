@@ -251,7 +251,7 @@ describe('Parser', function () {
       )
 
       .parse('FooBarSpam')
-      .then(done.fail.bind(null, "Should not resolve"))
+      .then(done.fail.bind(null, 'Should not resolve'))
       .catch(function (err) {
         expect(err.expecting).toEqual(['Baz']);
         expect(err.context).toEqual('Spam');
@@ -259,4 +259,27 @@ describe('Parser', function () {
       });
     })
   });
+
+  describe('end matcher', function () {
+    it('should match an empty string', function (done) {
+      Parser.end.parse('')
+      .then(function (res) {
+        expect(res).toEqual({
+          matched: [],
+          remaining: ''
+        });
+      })
+      .catch(done.fail.bind(done, 'should not fail'))
+      .done(done)
+    });
+
+    it('should not match a non-empty string', function (done) {
+      Parser.end.parse('a')
+      .then(done.fail.bind(done, 'should not resolve'))
+      .catch(function (err) {
+        expect(err.context).toEqual('a');
+        done();
+      });
+    });
+  })
 });
