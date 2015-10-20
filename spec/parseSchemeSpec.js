@@ -172,10 +172,18 @@ describe('parseScheme', function () {
   });
 
   it('should not succeed if trailing nonesence', function (done) {
-    parseScheme.one('(foo bar)!#blah')
+    parseScheme.one('(foo bar) )blah')
     .then(done.fail.bind(done, 'should not resolve'))
     .catch(function (err) {
-      expect(err.context).toEqual('!#blah');
+      expect(err.context).toEqual(')blah');
+      done();
+    });
+  });
+  it('multi-expression should not succeed if trailing nonesence', function (done) {
+    parseScheme.many('(foo bar) "Hello" )blah')
+    .then(done.fail.bind(done, 'should not resolve'))
+    .catch(function (err) {
+      expect(err.context).toEqual(')blah');
       done();
     });
   });
