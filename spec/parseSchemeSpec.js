@@ -160,4 +160,14 @@ describe('parseScheme', function () {
     .catch(done.fail)
     .done(done);
   });
+
+  it('should give good failure message for nested parse error', function (done) {
+    parseScheme.one('(foo (bar (baz #u)))')
+    .then(done.fail.bind(done, 'should not resolve'))
+    .catch(function (err) {
+      expect(err.expecting.length).toEqual(1);
+      expect(err.context).toEqual('u)))');
+      done();
+    });
+  });
 });

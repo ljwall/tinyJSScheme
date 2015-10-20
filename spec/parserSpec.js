@@ -22,10 +22,8 @@ describe('Parser', function () {
       m.parse('BarFoo!')
       .then(done.fail.bind(null, "Should not resolve"))
       .catch(function (err) {
-        expect(err.expecting).toEqual([{
-          val: 'Foo',
-          context: 'BarFoo!'
-        }]);
+        expect(err.expecting).toEqual(['Foo']);
+        expect(err.context).toEqual('BarFoo!');
         done();
       });
 
@@ -58,10 +56,8 @@ describe('Parser', function () {
       m.parse('FooBarSpam')
       .then(done.fail.bind(null, "Should not resolve"))
       .catch(function (err) {
-        expect(err.expecting).toEqual([{
-          val: 'Baz',
-          context: 'Spam'
-        }]);
+        expect(err.expecting).toEqual(['Baz']);
+        expect(err.context).toEqual('Spam')
         done();
       });
 
@@ -89,13 +85,8 @@ describe('Parser', function () {
       m.parse('BazSpamHam')
       .then(done.fail.bind(null, "Should not resolve"))
       .catch(function (err) {
-        expect(err.expecting).toEqual([{
-          val: 'Foo',
-          context: 'BazSpamHam'
-        }, {
-          val: 'Bar',
-          context: 'BazSpamHam'
-        }]);
+        expect(err.expecting).toEqual(['Foo', 'Bar']);
+        expect(err.context).toEqual('BazSpamHam');
         done();
       });
     });
@@ -262,12 +253,8 @@ describe('Parser', function () {
       .parse('FooBarSpam')
       .then(done.fail.bind(null, "Should not resolve"))
       .catch(function (err) {
-        expect(err.expecting).toEqual([
-          {
-            val: 'Baz',
-            context: 'Spam'
-          }
-        ]);
+        expect(err.expecting).toEqual(['Baz']);
+        expect(err.context).toEqual('Spam');
         done();
       });
     })
