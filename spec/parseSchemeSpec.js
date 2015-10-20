@@ -13,53 +13,53 @@ describe('parseScheme', function () {
   });
 
   it('should match Strings', function (done) {
-    parseScheme.one('"Foo\\tBar\\n\\"Spam\\\\"rest')
+    parseScheme.one('"Foo\\tBar\\n\\"Spam\\\\"')
     .then(function (res) {
       expect(res.matched[0]).toEqual(new scheme.SchemeString('Foo\tBar\n"Spam\\'));
-      expect(res.remaining).toEqual('rest');
+      expect(res.remaining).toEqual('');
     })
     .catch(done.fail)
     .done(done);
   });
 
   it('should match #t as true', function (done) {
-    parseScheme.one('#trest')
+    parseScheme.one('#t')
     .then(function (res) {
       expect(res.matched[0]).toEqual(new scheme.SchemeBool(true));
-      expect(res.remaining).toEqual('rest');
+      expect(res.remaining).toEqual('');
     })
     .catch(done.fail)
     .done(done);
   });
   it('should match #f as false', function (done) {
-    parseScheme.one('#frest')
+    parseScheme.one('#f')
     .then(function (res) {
       expect(res.matched[0]).toEqual(new scheme.SchemeBool(false));
-      expect(res.remaining).toEqual('rest');
+      expect(res.remaining).toEqual('');
     })
     .catch(done.fail)
     .done(done);
   });
   it('should match integers', function (done) {
-    parseScheme.one('123rest')
+    parseScheme.one('123')
     .then(function (res) {
       expect(res.matched[0]).toEqual(new scheme.SchemeNum(123));
-      expect(res.remaining).toEqual('rest');
+      expect(res.remaining).toEqual('');
     })
     .catch(done.fail)
     .done(done);
   });
   it('should match decimals', function (done) {
-    parseScheme.one('123.456rest')
+    parseScheme.one('123.456')
     .then(function (res) {
       expect(res.matched[0]).toEqual(new scheme.SchemeNum(123.456));
-      expect(res.remaining).toEqual('rest');
+      expect(res.remaining).toEqual('');
     })
     .catch(done.fail)
     .done(done);
   });
   it('should match lists', function (done) {
-    parseScheme.one('(2.718 #t "hello" foo)rest')
+    parseScheme.one('(2.718 #t "hello" foo)')
     .then(function (res) {
       expect(res.matched[0]).toEqual(
         new scheme.SchemeList([
@@ -69,13 +69,13 @@ describe('parseScheme', function () {
           new scheme.SchemeAtom('foo')
         ])
       );
-      expect(res.remaining).toEqual('rest');
+      expect(res.remaining).toEqual('');
     })
     .catch(done.fail)
     .done(done);
   });
   it('should match nestesd list', function (done) {
-    parseScheme.one('(2.718 (#t "hello") foo)rest')
+    parseScheme.one('(2.718 (#t "hello") foo)')
     .then(function (res) {
       expect(res.matched[0]).toEqual(
         new scheme.SchemeList([
@@ -87,22 +87,22 @@ describe('parseScheme', function () {
           new scheme.SchemeAtom('foo')
         ])
       );
-      expect(res.remaining).toEqual('rest');
+      expect(res.remaining).toEqual('');
     })
     .catch(done.fail)
     .done(done);
   });
   it('should match empty list', function (done) {
-    parseScheme.one('()rest')
+    parseScheme.one('()')
     .then(function (res) {
       expect(res.matched[0]).toEqual(new scheme.SchemeList([]));
-      expect(res.remaining).toEqual('rest');
+      expect(res.remaining).toEqual('');
     })
     .catch(done.fail)
     .done(done);
   });
   it('should match qutoed lists', function (done) {
-    parseScheme.one('\'(foo)rest')
+    parseScheme.one('\'(foo)')
     .then(function (res) {
       expect(res.matched[0]).toEqual(
         new scheme.SchemeList([
@@ -110,7 +110,7 @@ describe('parseScheme', function () {
           new scheme.SchemeList([new scheme.SchemeAtom('foo')])
         ]));
 
-      expect(res.remaining).toEqual('rest');
+      expect(res.remaining).toEqual('');
     })
     .catch(done.fail)
     .done(done);
@@ -167,6 +167,15 @@ describe('parseScheme', function () {
     .catch(function (err) {
       expect(err.expecting.length).toEqual(1);
       expect(err.context).toEqual('u)))');
+      done();
+    });
+  });
+
+  it('should not succeed if trailing nonesence', function (done) {
+    parseScheme.one('(foo bar)!#blah')
+    .then(done.fail.bind(done, 'should not resolve'))
+    .catch(function (err) {
+      expect(err.context).toEqual('!#blah');
       done();
     });
   });
